@@ -1,5 +1,5 @@
 
-import { dobro, somar, temperatura, media, maior } from './services.js'
+import { dobro, somar, temperatura, media, numeroMaior, primaria, cinema, frequencia } from './services.js'
 import { Router } from 'express'
 const server = Router();
 
@@ -24,7 +24,6 @@ server.get('/somar', (req, resp) => {
 server.post('/somar', (req, resp) => {
     try {
         const { valores: { a, b } } = req.body
-
         const x = somar(a, b);
 
         resp.send({
@@ -41,7 +40,6 @@ server.post('/somar', (req, resp) => {
 server.get('/dobro/:numero', (req, resp) => {
     try {
         const Numero = Number(req.params.numero);
-
         const x = dobro(Numero);
 
         resp.send({
@@ -73,7 +71,6 @@ server.post('/temperatura', (req, resp) => {
 server.post('/media', (req, resp) => {
     try {
         const { valores: { a, b, c } } = req.body
-
         const x = media(a, b, c);
 
         resp.send({
@@ -88,13 +85,56 @@ server.post('/media', (req, resp) => {
 
 server.post('/maior', (req, resp) => {
     try {
-        const a = Number(req.body.a)
-        const x = maior(a);
+        const a = req.body;
+        const x = numeroMaior(a);
 
         resp.send({
             maior: x
         })
     } catch (err) {
+        resp.status(404).send({
+            error: err.message
+        })
+    }
+})
+
+server.get('/primaria/:cor', (req, resp) => {
+    try {
+        const { cor } = req.params;
+        const corPrima = primaria(cor);
+        resp.send({
+            primaria: corPrima
+        });
+    } catch (err) {
+        resp.status(404).send({
+            erro: err.message
+        })
+    }
+})
+
+server.post('/ingresso', (req, resp) => {
+    try{
+        const { inteira, meia, dia, naci } = req.body;
+        const total = cinema (inteira, meia, dia, naci); 
+        resp.send({
+            total: total
+        })
+    }catch (err) {
+        resp.status(404).send({
+            error: err.message
+        })
+    }
+})
+
+server.get('/frequencia/:texto/:caract', (req, resp) => {
+    try{
+        const { texto, caract } = req.params;
+        const x = frequencia (texto, caract);
+        resp.send({
+            freq: x 
+        })
+
+    }catch (err) {
         resp.status(404).send({
             error: err.message
         })
